@@ -1,0 +1,170 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath 'net.researchgate:gradle-release:2.6.0'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven'
+    id 'signing'
+    id 'checkstyle'
+    id "net.researchgate.release" version "2.6.0"
+}
+
+ext {
+    testContainversVersion = '1.12.0'
+    lombok = "org.projectlombok:lombok:1.18.10"
+}
+
+group = "org.motometer.telegram"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+ext."signing.keyId" = System.getenv('GPG_KEY_ID')
+ext."signing.secretKeyRingFile" = System.getenv('GPG_KEY_LOCATION')
+ext."signing.password" = System.getenv('GPG_PASSWORD')
+ext."ossrhUsername" = System.getenv('OSSRH_USERNAME')
+ext."ossrhPassword" = System.getenv('OSSRH_PASSWORD')
+
+ext.'immutables' = 'org.immutables:value:2.8.0'
+ext.'immutablesGson' = 'org.immutables:gson:2.8.0'
+ext.'lombok' = 'org.projectlombok:lombok:1.18.10'
+ext.'jsr305' = 'com.google.code.findbugs:jsr305:3.0.1'
+
+sourceSets {
+    integrationTest {
+        compileClasspath += main.output + main.compileClasspath
+        compileClasspath += test.output + test.compileClasspath
+        runtimeClasspath += main.runtimeClasspath + test.runtimeClasspath
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+repositories {
+    mavenLocal()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.8.6'
+    compile 'org.motometer.telegram:telegram-bot-client:0.0.1-SNAPSHOT'
+
+    compileOnly jsr305
+    compileOnly immutables
+    compileOnly immutablesGson
+    compileOnly lombok
+
+    annotationProcessor immutables
+    annotationProcessor lombok
+
+    integrationTestAnnotationProcessor lombok
+
+    testCompileOnly jsr305
+    testImplementation "org.junit.jupiter:junit-jupiter:5.5.1"
+    testImplementation "org.assertj:assertj-core:3.13.2"
+    testCompile "commons-io:commons-io:2.6"
+
+    integrationTestImplementation "org.testcontainers:testcontainers:$testContainversVersion"
+    integrationTestImplementation "org.testcontainers:junit-jupiter:$testContainversVersion"
+    integrationTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.25.1'
+    integrationTestImplementation 'org.skyscreamer:jsonassert:1.5.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+release {
+    git {
+        requireBranch = 'master'
+    }
+}
+
+task integrationTest(type: Test) {
+    group 'verification'
+    description 'Runs the integration tests.'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    mustRunAfter test
+    useJUnitPlatform()
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.any { it.name == 'build' || it.name == 'assemble' }) {
+        tasks.findAll {
+            it.name == 'signArchives' || it.name == 'signDocsJar' || it.name == 'signTestJar'
+        }.each { task ->
+            task.enabled = false
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            pom.project {
+                name = 'Telegram Bot API implementation'
+                packaging 'jar'
+                description 'Telegram Bot API implementation'
+                url = 'https://github.com/motometer/telegram-bot-core'
+
+                scm {
+                    connection = 'scm:git:https://github.com/motometer/telegram-bot-core.git'
+                    developerConnection = 'scm:git:https://github.com/motometer/telegram-bot-core.git'
+                    url = 'https://github.com/motometer/telegram-bot-client'
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'vbychkovskyi'
+                        name = 'Viacheslav Bychkovskyi'
+                        email = 'vbychkovskyy@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign configurations.archives
+}
+
+check.dependsOn integrationTest
+uploadArchives.dependsOn signArchives
