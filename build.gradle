@@ -77,7 +77,7 @@ dependencies {
     integrationTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     testCompileOnly jsr305
-    testCompileOnly "com.google.dagger:dagger:$daggerVersion"
+    testImplementation "com.google.dagger:dagger:$daggerVersion"
     testImplementation "org.junit.jupiter:junit-jupiter:5.5.1"
     testImplementation "org.assertj:assertj-core:3.13.2"
     testCompile "commons-io:commons-io:2.6"

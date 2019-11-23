@@ -4,6 +4,8 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.motometer.telegram.bot.WebHookListener;
+import org.motometer.telegram.bot.core.spi.CoreWebHookListenerProvider;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
@@ -15,14 +17,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CoreWebHookListenerTest extends AbstractDynamoDBTest {
 
     private static final String UPDATE = "/CoreWebHookListenerTest/update.json";
-    private CoreWebHookListener listener;
+    private WebHookListener listener;
 
 
     @Override
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        listener = CoreWebHookListener.defaultCoreWebHookListener(getProperties());
+        listener = new CoreWebHookListenerProvider(getProperties()).provide();
     }
 
     @Test

@@ -1,4 +1,4 @@
-package org.motometer.telegram.bot.core;
+package org.motometer.telegram.bot.core.spi;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,7 +13,7 @@ import org.motometer.telegram.bot.core.update.UpdateListenerModule;
 import java.util.Map;
 
 @Module(includes = {UpdateListenerModule.class, PropertyModule.class})
-class BotModule {
+class CoreModule {
 
     @Provides
     Bot provideBot(Map<PropertyKey, String> properties) {
