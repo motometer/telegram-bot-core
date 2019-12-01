@@ -5,12 +5,13 @@ import org.motometer.telegram.bot.UpdateListener;
 import org.motometer.telegram.bot.api.Message;
 import org.motometer.telegram.bot.api.Update;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.motometer.telegram.bot.core.update.BotCommand.HELP;
 
 class FacadeUpdateListener implements UpdateListener {
 
@@ -32,12 +33,11 @@ class FacadeUpdateListener implements UpdateListener {
         listener.onEvent(event);
     }
 
-    @Nullable
     private BotCommand toCommand(Update event) {
         return Optional.of(event)
             .map(Update::message)
             .map(Message::text)
             .flatMap(BotCommand::of)
-            .orElse(null);
+            .orElse(HELP);
     }
 }

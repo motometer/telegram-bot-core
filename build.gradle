@@ -57,12 +57,13 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.amazonaws:aws-java-sdk:1.11.659'
-    compileOnly "com.google.dagger:dagger:$daggerVersion"
+    implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.11.659'
+    implementation "com.google.dagger:dagger:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'org.motometer.telegram:telegram-bot-client:0.0.1-SNAPSHOT'
+    compile 'org.motometer.telegram:telegram-aws-bot:0.0.1-SNAPSHOT'
 
     compileOnly jsr305
     compileOnly immutables
@@ -177,3 +178,13 @@ signing {
 
 check.dependsOn integrationTest
 uploadArchives.dependsOn signArchives
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+build.dependsOn buildZip

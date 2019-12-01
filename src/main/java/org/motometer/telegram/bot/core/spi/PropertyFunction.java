@@ -12,11 +12,7 @@ enum PropertyFunction implements Function<PropertyKey, String> {
     public String apply(PropertyKey propertyKey) {
         return ((Chain) System::getProperty)
             .defaultIfNull(System::getenv)
-            .defaultIfNull(value -> {
-                throw new IllegalStateException(
-                    "Neither system property nor environment is provided: " + propertyKey.name()
-                );
-            })
+            .defaultIfNull(value -> "")
             .apply(propertyKey.name());
     }
 

@@ -9,7 +9,7 @@ import org.motometer.telegram.bot.api.ImmutableUser;
 import org.motometer.telegram.bot.api.Message;
 import org.motometer.telegram.bot.api.Update;
 import org.motometer.telegram.bot.api.User;
-import org.motometer.telegram.bot.core.AbstractDynamoDBTest;
+import org.motometer.telegram.bot.core.AbstractIntegrationTest;
 import org.motometer.telegram.bot.core.dao.UserDao;
 import org.motometer.telegram.bot.core.props.PropertyModule;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
-class FacadeUpdateListenerTest extends AbstractDynamoDBTest {
+class FacadeUpdateListenerTest extends AbstractIntegrationTest {
 
     @Inject
     UpdateListener updateListener;
@@ -36,6 +36,7 @@ class FacadeUpdateListenerTest extends AbstractDynamoDBTest {
         super.setUp();
         FacadesComponent component = DaggerFacadesComponent.builder()
             .propertyModule(new PropertyModule(getProperties()))
+            .dynamoDBModule(new TestDynamoDBModule())
             .build();
 
         component.inject(this);
@@ -43,14 +44,12 @@ class FacadeUpdateListenerTest extends AbstractDynamoDBTest {
 
     @Test
     void createTableTwice() {
-        userDao.createUsersTable();
-        userDao.createUsersTable();
+        userDao.init();
+        userDao.init();
     }
 
     @Test
     void saveUserOnStart() {
-        userDao.createUsersTable();
-
         updateListener.onEvent(newUpdate(() -> newMessage(() -> "/start", () -> newUser("Motometer BOT"))));
 
         ImmutableUser updatedUser = newUser("Motometer");
@@ -64,7 +63,7 @@ class FacadeUpdateListenerTest extends AbstractDynamoDBTest {
 
     @Test
     void shouldNotSaveOnMessage() {
-        userDao.createUsersTable();
+        userDao.init();
 
         updateListener.onEvent(newUpdate(() -> newMessage(() -> "/help", () -> newUser("Motometer BOT"))));
 

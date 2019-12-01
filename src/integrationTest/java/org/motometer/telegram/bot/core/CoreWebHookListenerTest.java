@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Testcontainers
-class CoreWebHookListenerTest extends AbstractDynamoDBTest {
+class CoreWebHookListenerTest extends AbstractIntegrationTest {
 
     private static final String UPDATE = "/CoreWebHookListenerTest/update.json";
     private WebHookListener listener;

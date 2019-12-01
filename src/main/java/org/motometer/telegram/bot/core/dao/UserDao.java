@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    void saveOrUpdate(User user);
+    UserDao init();
 
-    void createUsersTable();
+    void saveOrUpdate(User user);
 
     Optional<User> findByUserId(long userId);
 }

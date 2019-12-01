@@ -29,7 +29,7 @@ class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void createUsersTable() {
+    public UserDaoImpl init() {
         try {
             dynamoDB.createTable(new CreateTableRequest()
                 .withTableName("telegram_users")
@@ -49,6 +49,7 @@ class UserDaoImpl implements UserDao {
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
+        return this;
     }
 
     @Override
