@@ -16,7 +16,6 @@
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter"/>
         <module name="SuppressWarningsHolder"/>
-        <module name="AnnotationUseStyle"/>
         <module name="TypeName"/>
         <module name="ClassTypeParameterName"/>
         <module name="AvoidStarImport"/>

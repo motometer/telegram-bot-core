@@ -10,12 +10,14 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
+import lombok.extern.slf4j.Slf4j;
 import org.motometer.telegram.bot.api.ImmutableUser;
 import org.motometer.telegram.bot.api.User;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+@Slf4j
 class UserDaoImpl implements UserDao {
 
     private final long readCapacityUnits;
@@ -47,7 +49,7 @@ class UserDaoImpl implements UserDao {
                 )
             );
         } catch (final Exception ex) {
-            ex.printStackTrace();
+            log.warn("An exception occurred during schema creation", ex);
         }
         return this;
     }

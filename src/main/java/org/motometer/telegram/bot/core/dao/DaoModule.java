@@ -9,6 +9,6 @@ public class DaoModule {
 
     @Provides
     UserDao provideUserDao(DynamoDB dynamoDB) {
-        return new UserDaoImpl(dynamoDB).init();
+        return new UserDaoImpl(dynamoDB);
     }
 }
