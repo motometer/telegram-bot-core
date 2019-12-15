@@ -2,17 +2,19 @@ package org.motometer.telegram.bot.core.update.reply;
 
 import org.motometer.telegram.bot.api.ImmutableSendMessage;
 import org.motometer.telegram.bot.api.Message;
-import org.motometer.telegram.bot.api.SendMessage;
+import org.motometer.telegram.bot.core.label.LabelKey;
+import org.motometer.telegram.bot.core.label.LabelService;
 
-public class InvalidInputSendMessageFactory implements SendMessageFactory {
+public class InvalidInputSendMessageFactory extends SendMessageFactoryTemplate {
+
+    public InvalidInputSendMessageFactory(LabelService labelService) {
+        super(labelService);
+    }
 
     @Override
-    public SendMessage createMessage(Message message) {
-        return ImmutableSendMessage.builder()
-            .chatId(message.chat().id())
+    public ImmutableSendMessage.Builder customize(ImmutableSendMessage.Builder builder, Message message) {
+        return builder
             .replyToMessageId(message.id())
-            .text("Я не зміг опрацювати ваше повідомлення.\n"
-                + "Перевірте Ваше повідомлення, або спробуйте /start")
-            .build();
+            .text(labelService.findString(LabelKey.INVALID_MESSAGE, toLocale(message)));
     }
 }
