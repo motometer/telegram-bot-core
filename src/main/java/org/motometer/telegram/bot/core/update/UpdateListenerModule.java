@@ -29,15 +29,15 @@ public class UpdateListenerModule {
     }
 
     @Provides
-    public MessageListener provideMessageListener(Set<CommandListener> listeners) {
+    public MessageListener provideMessageListener(Set<CommandListener> listeners, LabelService labelService) {
         Map<BotCommand, UpdateListener> map = listeners.stream()
             .collect(Collectors.toMap(CommandListener::command, v -> v));
-        return new MessageListener(map, update -> new InvalidInputAction(update.message()));
+        return new MessageListener(map, update -> new InvalidInputAction(labelService, update.message()));
     }
 
     @Provides
-    public CallbackQueryListener provideCallbackQueryListener() {
-        return new CallbackQueryListener();
+    public CallbackQueryListener provideCallbackQueryListener(LabelService labelService) {
+        return new CallbackQueryListener(labelService);
     }
 
     @Provides
