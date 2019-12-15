@@ -1,6 +1,7 @@
 package org.motometer.telegram.bot.core.update;
 
 import org.junit.jupiter.api.Test;
+import org.motometer.telegram.bot.Action;
 import org.motometer.telegram.bot.UpdateListener;
 import org.motometer.telegram.bot.api.ImmutableUpdate;
 import org.motometer.telegram.bot.api.Update;
@@ -17,10 +18,15 @@ class UpdateListenerChainTest {
     void chain() throws Exception {
         final CompletableFuture<String> future = new CompletableFuture<>();
 
-        UpdateListener listener = v -> future.complete("Done");
+        UpdateListener listener = v -> {
+            future.complete("Done");
+            return Action.empty();
+        };
 
         final Update update = ImmutableUpdate.builder().id(1)
-            .message(new MessageFixture().createMessage())
+            .message(new MessageFixture()
+                .withChat()
+                .createMessage())
             .build();
 
         UpdateListenerChain.start()

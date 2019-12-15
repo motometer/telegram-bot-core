@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 enum BotCommand {
     START("/start"),
-    HOME("/home"),
     HELP("/help");
 
     private static final Map<String, BotCommand> INDEX = EnumSet.allOf(BotCommand.class)

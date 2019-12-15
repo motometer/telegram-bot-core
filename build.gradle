@@ -77,12 +77,16 @@ dependencies {
 
     integrationTestAnnotationProcessor lombok
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    testAnnotationProcessor lombok
     integrationTestAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     testCompileOnly jsr305
+    testCompileOnly lombok
     testImplementation "com.google.dagger:dagger:$daggerVersion"
     testImplementation "org.junit.jupiter:junit-jupiter:5.5.1"
     testImplementation "org.assertj:assertj-core:3.13.2"
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+
     testCompile "commons-io:commons-io:2.6"
 
     integrationTestImplementation "com.google.dagger:dagger:$daggerVersion"

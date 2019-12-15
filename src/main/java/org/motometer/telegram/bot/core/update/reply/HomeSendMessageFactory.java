@@ -1,43 +1,30 @@
 package org.motometer.telegram.bot.core.update.reply;
 
-import org.motometer.telegram.bot.api.Chat;
-import org.motometer.telegram.bot.api.ImmutableInlineKeyboardButton;
-import org.motometer.telegram.bot.api.ImmutableInlineKeyboardMarkup;
+import org.motometer.telegram.bot.api.ImmutableReplyKeyboardMarkup;
 import org.motometer.telegram.bot.api.ImmutableSendMessage;
-import org.motometer.telegram.bot.api.InlineKeyboardButton;
 import org.motometer.telegram.bot.api.Message;
 import org.motometer.telegram.bot.api.ReplyMarkup;
 import org.motometer.telegram.bot.api.SendMessage;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import static java.util.Collections.singletonList;
+import static org.motometer.telegram.bot.api.ImmutableKeyboardButton.builder;
 
 public class HomeSendMessageFactory implements SendMessageFactory {
 
     @Override
-    public Optional<SendMessage> createMessage(Message message) {
-        return Optional.ofNullable(message.chat())
-            .map(Chat::id)
-            .map(chatId -> ImmutableSendMessage.builder()
-                .chatId(chatId)
-                .replyMarkup(newReply())
-                .text("Text")
-                .build()
-            );
-    }
-
-    private ReplyMarkup newReply() {
-        return ImmutableInlineKeyboardMarkup.builder()
-            .addInlineKeyboard(buttons())
+    public SendMessage createMessage(Message message) {
+        return ImmutableSendMessage.builder()
+            .chatId(message.chat().id())
+            .text("Виберідь дію:")
+            .replyMarkup(markup())
             .build();
     }
 
-    private List<InlineKeyboardButton> buttons() {
-        return Collections.singletonList(ImmutableInlineKeyboardButton.builder()
-            .text("Add a vehicle")
-            .callbackData("XYZ")
-            .build()
-        );
+    private ReplyMarkup markup() {
+        return ImmutableReplyKeyboardMarkup.builder()
+            .resizeKeyboard(true)
+            .addKeyboard(singletonList(builder().text("Записати заправку").build()))
+            .addKeyboard(singletonList(builder().text("Список попередніх заправок").build()))
+            .build();
     }
 }

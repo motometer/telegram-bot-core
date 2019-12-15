@@ -3,6 +3,8 @@ package org.motometer.telegram.bot.core.update;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.motometer.telegram.bot.UpdateListener;
+import org.motometer.telegram.bot.api.ChatType;
+import org.motometer.telegram.bot.api.ImmutableChat;
 import org.motometer.telegram.bot.api.ImmutableMessage;
 import org.motometer.telegram.bot.api.ImmutableUpdate;
 import org.motometer.telegram.bot.api.ImmutableUser;
@@ -85,6 +87,7 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
             .fromUser(userSupplier.get())
             .text(textSupplier.get())
             .date(13213)
+            .chat(ImmutableChat.builder().id(123).type(ChatType.PRIVATE_CHAT).build())
             .build();
     }
 
