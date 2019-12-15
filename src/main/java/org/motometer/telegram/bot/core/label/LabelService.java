@@ -5,4 +5,6 @@ import java.util.Locale;
 public interface LabelService {
 
     Label find(Label.Key key, Locale locale);
+
+    String findString(Label.Key key, Locale locale);
 }
