@@ -48,7 +48,7 @@ public class UpdateListenerModule {
 
     @Provides
     @IntoSet
-    public CommandListener provideHelpCommand() {
-        return new ReplyCommandListener(u -> new HelpAction(u.message()), BotCommand.HELP);
+    public CommandListener provideHelpCommand(LabelService labelService) {
+        return new ReplyCommandListener(u -> new HelpAction(labelService, u.message()), BotCommand.HELP);
     }
 }

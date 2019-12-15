@@ -20,6 +20,7 @@ class HomeActionTest {
     void doAction() {
         Bot bot = Mockito.mock(Bot.class);
 
+        //FIXME 123123123 Copy&paste
         LabelService labelService = mock(LabelService.class);
 
         when(labelService.findString(any(), any()))
