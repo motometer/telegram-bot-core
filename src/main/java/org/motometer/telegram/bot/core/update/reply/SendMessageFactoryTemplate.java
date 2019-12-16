@@ -17,8 +17,8 @@ public abstract class SendMessageFactoryTemplate implements SendMessageFactory {
 
     @Override
     public final SendMessage createMessage(Message message) {
-
-        return customize(defaultBuilder(message), message).build();
+        return customize(defaultBuilder(message), message)
+            .build();
     }
 
     public abstract ImmutableSendMessage.Builder customize(ImmutableSendMessage.Builder builder, Message message);
