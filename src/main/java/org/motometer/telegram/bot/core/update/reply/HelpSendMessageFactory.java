@@ -2,20 +2,18 @@ package org.motometer.telegram.bot.core.update.reply;
 
 import org.motometer.telegram.bot.api.ImmutableSendMessage;
 import org.motometer.telegram.bot.api.Message;
-import org.motometer.telegram.bot.api.SendMessage;
+import org.motometer.telegram.bot.core.label.LabelKey;
+import org.motometer.telegram.bot.core.label.LabelService;
 
-public class HelpSendMessageFactory implements SendMessageFactory {
+public class HelpSendMessageFactory extends SendMessageFactoryTemplate {
+
+    public HelpSendMessageFactory(LabelService labelService) {
+        super(labelService);
+    }
 
     @Override
-    public SendMessage createMessage(Message message) {
-        return ImmutableSendMessage.builder()
-            .chatId(message.chat().id())
-            .text("Мотометер це бот для запису витрат на автомобіль. \n"
-                + "У Мотометер можна записувати витрати на пальне, сервіс та інше.\n"
-                + "Доступні команди: \n"
-                + "\t/start - початок роботи\n"
-                + "\t/help - допомога\n"
-                + "\t/feedback - написати відгук, або проблему\n")
-            .build();
+    public ImmutableSendMessage.Builder customize(ImmutableSendMessage.Builder builder, Message message) {
+        return builder
+            .text(labelService.findString(LabelKey.HELP_MESSAGE, toLocale(message)));
     }
 }

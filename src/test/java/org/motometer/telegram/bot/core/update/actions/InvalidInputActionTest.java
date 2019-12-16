@@ -3,10 +3,14 @@ package org.motometer.telegram.bot.core.update.actions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.motometer.telegram.bot.Bot;
+import org.motometer.telegram.bot.core.label.LabelService;
 import org.motometer.telegram.bot.core.update.reply.MessageFixture;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.motometer.telegram.bot.core.update.actions.GenericArgumentMatcher.assertThat;
 import static org.motometer.telegram.bot.core.update.reply.SendMessageAssert.assertThatSendMessage;
 
@@ -16,7 +20,15 @@ class InvalidInputActionTest {
     void doAction() {
         Bot bot = Mockito.mock(Bot.class);
 
-        InvalidInputAction action = new InvalidInputAction(new MessageFixture().withChat().createMessage());
+        //FIXME 123123123 Copy&paste
+        LabelService labelService = mock(LabelService.class);
+
+        when(labelService.findString(any(), any()))
+            .thenReturn("Я не зміг опрацювати ваше повідомлення.");
+
+        InvalidInputAction action = new InvalidInputAction(labelService,
+            new MessageFixture().withChat().createMessage()
+        );
 
         action.doAction(bot);
 

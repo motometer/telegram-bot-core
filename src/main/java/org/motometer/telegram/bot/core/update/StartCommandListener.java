@@ -6,6 +6,7 @@ import org.motometer.telegram.bot.Action;
 import org.motometer.telegram.bot.api.Message;
 import org.motometer.telegram.bot.api.Update;
 import org.motometer.telegram.bot.core.dao.UserDao;
+import org.motometer.telegram.bot.core.label.LabelService;
 import org.motometer.telegram.bot.core.update.actions.HomeAction;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import java.util.Optional;
 class StartCommandListener implements CommandListener {
 
     private final UserDao userDao;
+    private final LabelService labelService;
 
     @Override
     public Action onEvent(Update event) throws BotException {
@@ -25,7 +27,7 @@ class StartCommandListener implements CommandListener {
             .map(Message::fromUser)
             .ifPresent(userDao::saveOrUpdate);
 
-        return new HomeAction(message);
+        return new HomeAction(labelService, message);
     }
 
     @Override
