@@ -13,4 +13,9 @@ public class ServiceModule {
     UserService provideUserService(UserDao userDao) {
         return new DefaultUserService(userDao);
     }
+
+    @Provides
+    ReportService provideReportService() {
+        return new DefaultReportService();
+    }
 }
