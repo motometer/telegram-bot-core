@@ -1,6 +1,6 @@
-package org.motometer.telegram.bot.core.dao;
+package org.motometer.core.dao;
 
-import org.motometer.telegram.bot.api.User;
+import org.motometer.core.service.model.User;
 
 import java.util.Optional;
 

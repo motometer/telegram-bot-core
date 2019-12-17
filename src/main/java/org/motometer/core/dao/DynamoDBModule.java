@@ -1,4 +1,4 @@
-package org.motometer.telegram.bot.core.dao;
+package org.motometer.core.dao;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;

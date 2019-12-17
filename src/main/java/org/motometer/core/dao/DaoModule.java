@@ -1,4 +1,4 @@
-package org.motometer.telegram.bot.core.dao;
+package org.motometer.core.dao;
 
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import dagger.Module;

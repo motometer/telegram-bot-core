@@ -1,4 +1,4 @@
-package org.motometer.telegram.bot.core.dao;
+package org.motometer.core.dao;
 
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
@@ -11,8 +11,8 @@ import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import lombok.extern.slf4j.Slf4j;
-import org.motometer.telegram.bot.api.ImmutableUser;
-import org.motometer.telegram.bot.api.User;
+import org.motometer.core.service.model.ImmutableUser;
+import org.motometer.core.service.model.User;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -58,7 +58,7 @@ class UserDaoImpl implements UserDao {
     public void saveOrUpdate(User user) {
         Table table = dynamoDB.getTable("telegram_users");
 
-        Item item = new Item().withPrimaryKey("telegram_user_id", user.id())
+        Item item = new Item().withPrimaryKey("telegram_user_id", user.telegramUserId())
             .withString("first_name", user.firstName())
             .withBoolean("is_bot", user.isBot());
         withItem(item, "last_name", user.lastName());
@@ -81,7 +81,7 @@ class UserDaoImpl implements UserDao {
 
         return Optional.ofNullable(table.getItem(spec))
             .map(outcome -> ImmutableUser.builder()
-                .id(outcome.getLong("telegram_user_id"))
+                .telegramUserId(outcome.getLong("telegram_user_id"))
                 .isBot(outcome.getBoolean("is_bot"))
                 .firstName(outcome.getString("first_name"))
                 .userName(outcome.getString("username"))

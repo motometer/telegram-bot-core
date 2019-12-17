@@ -5,7 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import org.motometer.telegram.bot.core.dao.DynamoDBModule;
+import org.motometer.core.dao.DynamoDBModule;
 import org.motometer.telegram.bot.core.props.PropertyKey;
 
 import java.util.Map;

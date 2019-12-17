@@ -12,8 +12,9 @@ import org.motometer.telegram.bot.api.Message;
 import org.motometer.telegram.bot.api.Update;
 import org.motometer.telegram.bot.api.User;
 import org.motometer.telegram.bot.core.AbstractIntegrationTest;
-import org.motometer.telegram.bot.core.dao.UserDao;
+import org.motometer.core.dao.UserDao;
 import org.motometer.telegram.bot.core.props.PropertyModule;
+import org.motometer.telegram.bot.core.update.adapters.UserAdapter;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.inject.Inject;
@@ -58,9 +59,9 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
 
         updateListener.onEvent(newUpdate(() -> newMessage(() -> "/start", () -> updatedUser)));
 
-        User user = userDao.findByUserId(203).orElseThrow(IllegalStateException::new);
+        org.motometer.core.service.model.User user = userDao.findByUserId(203).orElseThrow(IllegalStateException::new);
 
-        assertThat(user).isEqualTo(updatedUser);
+        assertThat(user).isEqualTo(org.motometer.core.service.model.ImmutableUser.copyOf(new UserAdapter(updatedUser)));
     }
 
     @Test
@@ -69,7 +70,7 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
 
         updateListener.onEvent(newUpdate(() -> newMessage(() -> "/help", () -> newUser("Motometer BOT"))));
 
-        Optional<User> user = userDao.findByUserId(203);
+        Optional<org.motometer.core.service.model.User> user = userDao.findByUserId(203);
 
         assertThat(user).isEmpty();
     }
