@@ -65,6 +65,13 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'org.postgresql:postgresql:42.2.9'
+    implementation 'org.flywaydb:flyway-core:6.1.4'
+
+    implementation 'one.util:streamex:0.7.2'
+
+    implementation 'org.jooq:jooq:3.12.3'
+    implementation 'org.jooq:jooq-meta:3.12.3'
+    implementation 'org.jooq:jooq-codegen:3.12.3'
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
@@ -97,6 +104,7 @@ dependencies {
     integrationTestImplementation "com.google.dagger:dagger:$daggerVersion"
     integrationTestImplementation "org.testcontainers:testcontainers:$testContainversVersion"
     integrationTestImplementation "org.testcontainers:junit-jupiter:$testContainversVersion"
+    integrationTestImplementation "org.testcontainers:postgresql:$testContainversVersion"
     integrationTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.25.1'
     integrationTestImplementation 'org.skyscreamer:jsonassert:1.5.0'
 }
@@ -213,3 +221,7 @@ task generateJOOQ {
 
 compileJava.dependsOn generateJOOQ
 generateJOOQ.dependsOn processResources
+
+checkstyleMain {
+    exclude '**/generated/**'
+}

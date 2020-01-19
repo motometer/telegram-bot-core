@@ -13,7 +13,6 @@ import org.motometer.telegram.bot.api.Update;
 import org.motometer.telegram.bot.api.User;
 import org.motometer.telegram.bot.core.AbstractIntegrationTest;
 import org.motometer.core.dao.UserDao;
-import org.motometer.telegram.bot.core.props.PropertyModule;
 import org.motometer.telegram.bot.core.update.adapters.UserAdapter;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -38,7 +37,7 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
     public void setUp() {
         super.setUp();
         FacadesComponent component = DaggerFacadesComponent.builder()
-            .propertyModule(new PropertyModule(getProperties()))
+            .propertyModule(getProperties())
             .build();
 
         component.inject(this);
@@ -54,7 +53,12 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
 
         org.motometer.core.service.model.User user = userDao.findByUserId(203).orElseThrow(IllegalStateException::new);
 
-        assertThat(user).isEqualTo(org.motometer.core.service.model.ImmutableUser.copyOf(new UserAdapter(updatedUser)));
+        assertThat(clearId(user))
+            .isEqualTo(clearId(new UserAdapter(updatedUser)));
+    }
+
+    private org.motometer.core.service.model.ImmutableUser clearId(org.motometer.core.service.model.User user) {
+        return org.motometer.core.service.model.ImmutableUser.copyOf(user).withId(null);
     }
 
     @Test

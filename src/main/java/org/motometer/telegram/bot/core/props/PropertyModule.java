@@ -17,7 +17,7 @@ public class PropertyModule {
     }
 
     @Provides
-    Map<PropertyKey, String> provideProperties() {
+    public Map<PropertyKey, String> provideProperties() {
         return properties;
     }
 }
