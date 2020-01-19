@@ -169,7 +169,7 @@ uploadArchives {
                 scm {
                     connection = 'scm:git:https://github.com/motometer/telegram-bot-core.git'
                     developerConnection = 'scm:git:https://github.com/motometer/telegram-bot-core.git'
-                    url = 'https://github.com/motometer/telegram-bot-client'
+                    url = 'https://github.com/motometer/telegram-bot-core'
                 }
 
                 licenses {
