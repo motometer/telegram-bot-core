@@ -28,24 +28,30 @@ class UserDaoImpl implements UserDao {
 
     @Override
     public void saveOrUpdate(User user) {
-        DSLContext create = DSL.using(dataSource, SQLDialect.POSTGRES);
 
-        Result<Record1<Integer>> count = create.select(count())
+        DSLContext jooq = DSL.using(dataSource, SQLDialect.POSTGRES);
+
+        Result<Record1<Integer>> count = jooq.select(count())
             .from(TelegramUsers.TELEGRAM_USERS)
             .where(TelegramUsers.TELEGRAM_USERS.TELEGRAM_USER_ID.eq(user.telegramUserId()))
             .fetch();
 
         if (exists(count)) {
-            create.update(TelegramUsers.TELEGRAM_USERS)
+            jooq.update(TelegramUsers.TELEGRAM_USERS)
                 .set(TelegramUsers.TELEGRAM_USERS.FIRST_NAME, user.firstName())
                 .set(TelegramUsers.TELEGRAM_USERS.LAST_NAME, user.lastName())
                 .set(TelegramUsers.TELEGRAM_USERS.USERNAME, user.userName())
                 .set(TelegramUsers.TELEGRAM_USERS.LANGUAGE_CODE, user.languageCode())
                 .execute();
         } else {
-            TelegramUsersRecord a = new TelegramUsersRecord();
-            update(user, create, a);
-            create.executeInsert(a);
+            TelegramUsersRecord record = new TelegramUsersRecord();
+            record.setId(jooq.nextval(Sequences.TELEGRAM_USERS_SEQ));
+            record.setTelegramUserId(user.telegramUserId());
+            record.setFirstName(user.firstName());
+            record.setLastName(user.lastName());
+            record.setLanguageCode(user.languageCode());
+            record.setIsBot(user.isBot());
+            jooq.executeInsert(record);
         }
     }
 
@@ -53,15 +59,6 @@ class UserDaoImpl implements UserDao {
         return StreamEx.of(fetch)
             .mapToInt(Record1::component1)
             .sum() > 0;
-    }
-
-    private void update(User user, DSLContext create, TelegramUsersRecord record) {
-        record.setId(create.nextval(Sequences.TELEGRAM_USERS_SEQ));
-        record.setTelegramUserId(user.telegramUserId());
-        record.setFirstName(user.firstName());
-        record.setLastName(user.lastName());
-        record.setLanguageCode(user.languageCode());
-        record.setIsBot(user.isBot());
     }
 
     @Override

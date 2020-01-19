@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.12.0.xsd">
-    <!-- Configure the database connection here -->
     <jdbc>
         <driver>org.postgresql.Driver</driver>
         <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
@@ -10,14 +9,12 @@
 
     <generator>
         <name>org.jooq.codegen.JavaGenerator</name>
-
         <database>
             <name>org.jooq.meta.postgres.PostgresDatabase</name>
             <inputSchema>public</inputSchema>
             <includes>.*</includes>
             <excludes></excludes>
         </database>
-
         <target>
             <packageName>org.motometer.core.dao.generated</packageName>
             <directory>build/generated/jooq/main</directory>
