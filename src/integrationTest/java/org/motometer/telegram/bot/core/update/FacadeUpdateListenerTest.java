@@ -39,16 +39,9 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
         super.setUp();
         FacadesComponent component = DaggerFacadesComponent.builder()
             .propertyModule(new PropertyModule(getProperties()))
-            .dynamoDBModule(new TestDynamoDBModule())
             .build();
 
         component.inject(this);
-    }
-
-    @Test
-    void createTableTwice() {
-        userDao.init();
-        userDao.init();
     }
 
     @Test
@@ -66,7 +59,6 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
 
     @Test
     void shouldNotSaveOnMessage() {
-        userDao.init();
 
         updateListener.onEvent(newUpdate(() -> newMessage(() -> "/help", () -> newUser("Motometer BOT"))));
 

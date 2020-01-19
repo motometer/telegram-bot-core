@@ -6,8 +6,6 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    UserDao init();
-
     void saveOrUpdate(User user);
 
     Optional<User> findByUserId(long userId);

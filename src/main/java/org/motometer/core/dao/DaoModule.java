@@ -1,14 +1,15 @@
 package org.motometer.core.dao;
 
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import dagger.Module;
 import dagger.Provides;
 
-@Module(includes = DynamoDBModule.class)
+import javax.sql.DataSource;
+
+@Module(includes = DataSourceModule.class)
 public class DaoModule {
 
     @Provides
-    UserDao provideUserDao(DynamoDB dynamoDB) {
-        return new UserDaoImpl(dynamoDB);
+    UserDao provideUserDao(DataSource dataSource) {
+        return new UserDaoImpl(dataSource);
     }
 }

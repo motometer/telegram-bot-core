@@ -36,7 +36,7 @@ public class AbstractIntegrationTest {
         Map<PropertyKey, String> properties = new HashMap<>();
         properties.put(PropertyKey.TELEGRAM_API, "http://localhost:" + mockTelegramApi.getMappedPort(8080));
         properties.put(PropertyKey.TELEGRAM_TOKEN, "token");
-        properties.put(PropertyKey.DYNAMODB_HOST, host);
+        properties.put(PropertyKey.JDBC_URL, host);
         properties.put(PropertyKey.AWS_REGION, "local");
         properties.put(PropertyKey.AWS_ACCESS_KEY_ID, "DEFAULT_ACCESS_KEY");
         properties.put(PropertyKey.AWS_SECRET_KEY, "DEFAULT_SECRET");
