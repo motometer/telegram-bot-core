@@ -1,5 +1,3 @@
-import org.jooq.codegen.GenerationTool
-
 buildscript {
     repositories {
         jcenter()
@@ -7,8 +5,6 @@ buildscript {
     }
     dependencies {
         classpath 'net.researchgate:gradle-release:2.6.0'
-        classpath 'org.jooq:jooq-codegen:3.12.3'
-        classpath 'org.postgresql:postgresql:42.2.9'
     }
 }
 
@@ -65,7 +61,6 @@ dependencies {
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'org.postgresql:postgresql:42.2.9'
-    implementation 'org.flywaydb:flyway-core:6.1.4'
 
     implementation 'one.util:streamex:0.7.2'
 
@@ -78,6 +73,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'org.motometer.telegram:telegram-bot-client:0.0.1-SNAPSHOT'
     compile 'org.motometer.telegram:telegram-aws-bot:0.0.1-SNAPSHOT'
+    compile 'org.motometer.telegram:telegram-bot-database:0.0.2-SNAPSHOT'
 
     compileOnly jsr305
     compileOnly immutables
@@ -104,7 +100,6 @@ dependencies {
     integrationTestImplementation "com.google.dagger:dagger:$daggerVersion"
     integrationTestImplementation "org.testcontainers:testcontainers:$testContainversVersion"
     integrationTestImplementation "org.testcontainers:junit-jupiter:$testContainversVersion"
-    integrationTestImplementation "org.testcontainers:postgresql:$testContainversVersion"
     integrationTestImplementation 'com.github.tomakehurst:wiremock-jre8:2.25.1'
     integrationTestImplementation 'org.skyscreamer:jsonassert:1.5.0'
 }
@@ -207,21 +202,3 @@ task buildZip(type: Zip) {
 }
 
 build.dependsOn buildZip
-
-
-def generatedResources = "$buildDir/generated/jooq"
-sourceSets.main.java.srcDirs += generatedResources
-
-task generateJOOQ {
-    outputs.dir generatedResources
-    doLast {
-        GenerationTool.generate(file("$buildDir/resources/main/jooq/motometer.xml").text)
-    }
-}
-
-compileJava.dependsOn generateJOOQ
-generateJOOQ.dependsOn processResources
-
-checkstyleMain {
-    exclude '**/generated/**'
-}

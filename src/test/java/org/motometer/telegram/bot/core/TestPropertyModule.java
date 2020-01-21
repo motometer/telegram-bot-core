@@ -25,7 +25,7 @@ public class TestPropertyModule extends PropertyModule {
         Map<PropertyKey, String> properties = new HashMap<>();
         properties.put(PropertyKey.TELEGRAM_API, "http://localhost:" + telegramApiPort);
         properties.put(PropertyKey.TELEGRAM_TOKEN, "token");
-        properties.put(PropertyKey.JDBC_URL, "jdbc:postgresql://127.0.0.1:" + postgresPort + "/test");
+        properties.put(PropertyKey.JDBC_URL, "jdbc:postgresql://127.0.0.1:5432/test");
         properties.put(PropertyKey.JDBC_USER, "test");
         properties.put(PropertyKey.JDBC_PASSWORD, "test");
         properties.put(PropertyKey.AWS_REGION, "local");

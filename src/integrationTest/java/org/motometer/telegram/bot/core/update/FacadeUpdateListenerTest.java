@@ -18,7 +18,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.inject.Inject;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,16 +58,6 @@ class FacadeUpdateListenerTest extends AbstractIntegrationTest {
 
     private org.motometer.core.service.model.ImmutableUser clearId(org.motometer.core.service.model.User user) {
         return org.motometer.core.service.model.ImmutableUser.copyOf(user).withId(null);
-    }
-
-    @Test
-    void shouldNotSaveOnMessage() {
-
-        updateListener.onEvent(newUpdate(() -> newMessage(() -> "/help", () -> newUser("Motometer BOT"))));
-
-        Optional<org.motometer.core.service.model.User> user = userDao.findByUserId(203);
-
-        assertThat(user).isEmpty();
     }
 
     private Update newUpdate(Supplier<Message> messageSupplier) {
