@@ -190,7 +190,6 @@ signing {
     sign configurations.archives
 }
 
-check.dependsOn integrationTest
 uploadArchives.dependsOn signArchives
 
 task buildZip(type: Zip) {
