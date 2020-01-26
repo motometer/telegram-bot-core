@@ -24,7 +24,7 @@ public class AbstractIntegrationTest {
     protected void setUp() {
         mockTeletramApi();
 
-        properties = new TestPropertyModule(5432, mockTelegramApi.getMappedPort(8080));
+        properties = new TestPropertyModule(mockTelegramApi.getMappedPort(8080));
     }
 
     private void mockTeletramApi() {

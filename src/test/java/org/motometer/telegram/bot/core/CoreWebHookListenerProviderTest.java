@@ -18,7 +18,7 @@ class CoreWebHookListenerProviderTest {
     void spi() {
         ServiceLoader<WebHookListenerProvider> load = ServiceLoader.load(WebHookListenerProvider.class);
 
-        new TestPropertyModule(8000, 8000)
+        new TestPropertyModule(8000)
             .provideProperties()
             .forEach((key, s) -> System.setProperty(key.name(), s));
 
