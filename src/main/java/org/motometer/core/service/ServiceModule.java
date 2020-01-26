@@ -2,11 +2,10 @@ package org.motometer.core.service;
 
 import dagger.Module;
 import dagger.Provides;
-import org.motometer.core.dao.DynamoDBModule;
 import org.motometer.core.dao.UserDao;
 
 
-@Module(includes = DynamoDBModule.class)
+@Module()
 public class ServiceModule {
 
     @Provides

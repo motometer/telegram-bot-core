@@ -1,91 +1,91 @@
 package org.motometer.core.dao;
 
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
-import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
-import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
-import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
-import com.amazonaws.services.dynamodbv2.model.KeyType;
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
-import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import one.util.streamex.StreamEx;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.Record1;
+import org.jooq.Result;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
+import org.motometer.core.dao.generated.Sequences;
+import org.motometer.core.dao.generated.tables.TelegramUser;
+import org.motometer.core.dao.generated.tables.records.TelegramUserRecord;
 import org.motometer.core.service.model.ImmutableUser;
 import org.motometer.core.service.model.User;
 
-import javax.annotation.Nullable;
+import javax.sql.DataSource;
 import java.util.Optional;
 
+import static org.jooq.impl.DSL.count;
+
 @Slf4j
+@RequiredArgsConstructor
 class UserDaoImpl implements UserDao {
 
-    private final long readCapacityUnits;
-    private final long writeCapacityUnits;
-    private final DynamoDB dynamoDB;
-
-    UserDaoImpl(DynamoDB dynamoDB) {
-        this.dynamoDB = dynamoDB;
-        readCapacityUnits = 5L;
-        writeCapacityUnits = 5L;
-    }
-
-    @Override
-    public UserDaoImpl init() {
-        try {
-            dynamoDB.createTable(new CreateTableRequest()
-                .withTableName("telegram_users")
-                .withProvisionedThroughput(new ProvisionedThroughput()
-                    .withReadCapacityUnits(readCapacityUnits)
-                    .withWriteCapacityUnits(writeCapacityUnits)
-                )
-                .withKeySchema(new KeySchemaElement()
-                    .withKeyType(KeyType.HASH)
-                    .withAttributeName("telegram_user_id")
-                )
-                .withAttributeDefinitions(new AttributeDefinition()
-                    .withAttributeName("telegram_user_id")
-                    .withAttributeType(ScalarAttributeType.N)
-                )
-            );
-        } catch (final Exception ex) {
-            log.warn("An exception occurred during schema creation", ex);
-        }
-        return this;
-    }
+    private final DataSource dataSource;
 
     @Override
     public void saveOrUpdate(User user) {
-        Table table = dynamoDB.getTable("telegram_users");
 
-        Item item = new Item().withPrimaryKey("telegram_user_id", user.telegramUserId())
-            .withString("first_name", user.firstName())
-            .withBoolean("is_bot", user.isBot());
-        withItem(item, "last_name", user.lastName());
-        withItem(item, "language_code", user.languageCode());
-        withItem(item, "username", user.userName());
-        table.putItem(item);
+        DSLContext jooq = DSL.using(dataSource, SQLDialect.POSTGRES);
+
+        Result<Record1<Integer>> count = jooq.select(count())
+            .from(TelegramUser.TELEGRAM_USER)
+            .where(TelegramUser.TELEGRAM_USER.TELEGRAM_USER_ID.eq(user.telegramUserId()))
+            .fetch();
+
+        if (exists(count)) {
+            jooq.update(TelegramUser.TELEGRAM_USER)
+                .set(TelegramUser.TELEGRAM_USER.FIRST_NAME, user.firstName())
+                .set(TelegramUser.TELEGRAM_USER.LAST_NAME, user.lastName())
+                .set(TelegramUser.TELEGRAM_USER.USERNAME, user.userName())
+                .set(TelegramUser.TELEGRAM_USER.LANGUAGE_CODE, user.languageCode())
+                .execute();
+        } else {
+            TelegramUserRecord record = new TelegramUserRecord();
+            record.setId(jooq.nextval(Sequences.TELEGRAM_USERS_SEQ));
+            record.setTelegramUserId(user.telegramUserId());
+            record.setFirstName(user.firstName());
+            record.setLastName(user.lastName());
+            record.setLanguageCode(user.languageCode());
+            record.setIsBot(user.isBot());
+            jooq.executeInsert(record);
+        }
     }
 
-    private void withItem(Item item, String attributeName, @Nullable String attributeValue) {
-        if (attributeValue != null) {
-            item.withString(attributeName, attributeValue);
-        }
+    private boolean exists(Result<Record1<Integer>> fetch) {
+        return StreamEx.of(fetch)
+            .mapToInt(Record1::component1)
+            .sum() > 0;
     }
 
     @Override
     public Optional<User> findByUserId(long userId) {
-        Table table = dynamoDB.getTable("telegram_users");
+        DSLContext create = DSL.using(dataSource, SQLDialect.POSTGRES);
 
-        GetItemSpec spec = new GetItemSpec().withPrimaryKey("telegram_user_id", userId);
+        Result<Record> fetch = create.select(TelegramUser.TELEGRAM_USER.fields())
+            .from(TelegramUser.TELEGRAM_USER)
+            .where(TelegramUser.TELEGRAM_USER.TELEGRAM_USER_ID.eq(userId))
+            .limit(1)
+            .fetch();
 
-        return Optional.ofNullable(table.getItem(spec))
-            .map(outcome -> ImmutableUser.builder()
-                .telegramUserId(outcome.getLong("telegram_user_id"))
-                .isBot(outcome.getBoolean("is_bot"))
-                .firstName(outcome.getString("first_name"))
-                .userName(outcome.getString("username"))
-                .build()
-            );
+        return StreamEx.of(fetch)
+            .map(v -> {
+                TelegramUserRecord record = new TelegramUserRecord();
+                record.from(v.intoMap());
+                return record;
+            })
+            .<User>map(v -> ImmutableUser.builder()
+                .id(v.getId())
+                .userName(v.getUsername())
+                .firstName(v.getFirstName())
+                .lastName(v.getLastName())
+                .isBot(v.getIsBot())
+                .languageCode(v.getLanguageCode())
+                .telegramUserId(v.getTelegramUserId())
+                .build()).findFirst();
+
     }
 }

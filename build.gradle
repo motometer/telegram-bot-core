@@ -60,12 +60,20 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.11.659'
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation 'ch.qos.logback:logback-classic:1.2.3'
+    implementation 'org.postgresql:postgresql:42.2.9'
+
+    implementation 'one.util:streamex:0.7.2'
+
+    implementation 'org.jooq:jooq:3.12.3'
+    implementation 'org.jooq:jooq-meta:3.12.3'
+    implementation 'org.jooq:jooq-codegen:3.12.3'
 
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'org.motometer.telegram:telegram-bot-client:0.0.1-SNAPSHOT'
     compile 'org.motometer.telegram:telegram-aws-bot:0.0.1-SNAPSHOT'
+    compile 'org.motometer.telegram:telegram-bot-database:0.0.2-SNAPSHOT'
 
     compileOnly jsr305
     compileOnly immutables
@@ -156,7 +164,7 @@ uploadArchives {
                 scm {
                     connection = 'scm:git:https://github.com/motometer/telegram-bot-core.git'
                     developerConnection = 'scm:git:https://github.com/motometer/telegram-bot-core.git'
-                    url = 'https://github.com/motometer/telegram-bot-client'
+                    url = 'https://github.com/motometer/telegram-bot-core'
                 }
 
                 licenses {

@@ -24,7 +24,7 @@ class CoreWebHookListenerTest extends AbstractIntegrationTest {
     @BeforeEach
     protected void setUp() {
         super.setUp();
-        listener = new CoreWebHookListenerProvider(getProperties()).provide();
+        listener = new CoreWebHookListenerProvider(getProperties().provideProperties()).provide();
     }
 
     @Test
