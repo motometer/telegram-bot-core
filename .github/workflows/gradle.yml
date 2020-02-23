@@ -16,8 +16,5 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build coveralls
       env:
-        JDBC_URL: ${{secrets.JDBC_URL}}
-        JDBC_USERNAME: ${{secrets.JDBC_USERNAME}}
-        JDBC_PASSWORD: ${{secrets.JDBC_PASSWORD}}
-        JDBC_SCHEMA: ${{secrets.JDBC_SCHEMA}}
+        COVERALLS_REPO_TOKEN: ${{secrets.COVERALLS_REPO_TOKEN}}
 
