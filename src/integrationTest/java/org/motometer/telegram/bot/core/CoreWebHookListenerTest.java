@@ -4,7 +4,7 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.motometer.telegram.bot.WebHookListener;
+import org.motometer.telegram.bot.core.api.WebHookListener;
 import org.motometer.telegram.bot.core.spi.CoreWebHookListenerProvider;
 import org.testcontainers.junit.jupiter.Testcontainers;
 

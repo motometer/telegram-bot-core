@@ -67,7 +67,6 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'org.motometer.telegram:telegram-bot-client:0.0.1-SNAPSHOT'
-    compile 'org.motometer.telegram:telegram-aws-bot:0.0.1-SNAPSHOT'
 
     compileOnly jsr305
     compileOnly immutables
@@ -186,13 +185,3 @@ signing {
 
 check.dependsOn integrationTest
 uploadArchives.dependsOn signArchives
-
-task buildZip(type: Zip) {
-    from compileJava
-    from processResources
-    into('lib') {
-        from configurations.runtimeClasspath
-    }
-}
-
-build.dependsOn buildZip

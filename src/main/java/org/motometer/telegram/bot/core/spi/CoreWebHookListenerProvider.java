@@ -1,8 +1,9 @@
 package org.motometer.telegram.bot.core.spi;
 
 import lombok.Getter;
-import org.motometer.telegram.bot.WebHookListener;
-import org.motometer.telegram.bot.WebHookListenerProvider;
+
+import org.motometer.telegram.bot.core.api.WebHookListener;
+import org.motometer.telegram.bot.core.api.WebHookListenerProvider;
 import org.motometer.telegram.bot.core.props.PropertyKey;
 import org.motometer.telegram.bot.core.props.PropertyModule;
 
@@ -16,7 +17,7 @@ public class CoreWebHookListenerProvider implements WebHookListenerProvider {
 
     @Inject
     @Getter
-    WebHookListener webHookListener;
+    WebHookListener updateListener;
 
     public CoreWebHookListenerProvider() {
         this(getProperties());
@@ -31,7 +32,7 @@ public class CoreWebHookListenerProvider implements WebHookListenerProvider {
 
     @Override
     public WebHookListener provide() {
-        return webHookListener;
+        return updateListener;
     }
 
     private static Map<PropertyKey, String> getProperties() {

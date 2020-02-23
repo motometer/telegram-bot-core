@@ -1,9 +1,8 @@
 package org.motometer.telegram.bot.core;
 
 import org.junit.jupiter.api.Test;
-import org.motometer.telegram.bot.Provider;
-import org.motometer.telegram.bot.WebHookListener;
-import org.motometer.telegram.bot.WebHookListenerProvider;
+import org.motometer.telegram.bot.core.api.WebHookListenerProvider;
+import org.motometer.telegram.bot.core.api.WebHookListener;
 
 import java.util.List;
 import java.util.ServiceLoader;
@@ -23,7 +22,7 @@ class CoreWebHookListenerProviderTest {
             .forEach((key, s) -> System.setProperty(key.name(), s));
 
         List<WebHookListener> list = StreamSupport.stream(load.spliterator(), false)
-            .map(Provider::provide)
+            .map(WebHookListenerProvider::provide)
             .collect(Collectors.toList());
 
         assertThat(list).hasSize(1);

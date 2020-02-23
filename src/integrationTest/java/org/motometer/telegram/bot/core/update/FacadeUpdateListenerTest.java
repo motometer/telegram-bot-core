@@ -2,7 +2,6 @@ package org.motometer.telegram.bot.core.update;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.motometer.telegram.bot.UpdateListener;
 import org.motometer.telegram.bot.api.ChatType;
 import org.motometer.telegram.bot.api.ImmutableChat;
 import org.motometer.telegram.bot.api.ImmutableMessage;
@@ -13,6 +12,7 @@ import org.motometer.telegram.bot.api.Update;
 import org.motometer.telegram.bot.api.User;
 import org.motometer.telegram.bot.core.AbstractIntegrationTest;
 import org.motometer.core.dao.UserDao;
+import org.motometer.telegram.bot.core.api.UpdateListener;
 import org.motometer.telegram.bot.core.update.adapters.UserAdapter;
 import org.testcontainers.junit.jupiter.Testcontainers;
 

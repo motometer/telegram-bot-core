@@ -1,10 +1,10 @@
 package org.motometer.telegram.bot.core.update;
 
 import org.junit.jupiter.api.Test;
-import org.motometer.telegram.bot.Action;
-import org.motometer.telegram.bot.UpdateListener;
 import org.motometer.telegram.bot.api.ImmutableUpdate;
 import org.motometer.telegram.bot.api.Update;
+import org.motometer.telegram.bot.core.api.Action;
+import org.motometer.telegram.bot.core.api.UpdateListener;
 import org.motometer.telegram.bot.core.update.reply.MessageFixture;
 
 import java.util.concurrent.CompletableFuture;
