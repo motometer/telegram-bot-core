@@ -14,9 +14,10 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build coveralls
       env:
         JDBC_URL: ${{secrets.JDBC_URL}}
         JDBC_USERNAME: ${{secrets.JDBC_USERNAME}}
         JDBC_PASSWORD: ${{secrets.JDBC_PASSWORD}}
         JDBC_SCHEMA: ${{secrets.JDBC_SCHEMA}}
+

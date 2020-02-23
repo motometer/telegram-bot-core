@@ -1,6 +1,1 @@
-#
-
-####Dynamo DB local
-- docker run -p 8000:8000 amazon/dynamodb-local
-- docker run --name motometer-local -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres:11 
- 
+[![Coverage Status](https://coveralls.io/repos/github/motometer/telegram-bot-core/badge.svg?branch=coveralls)](https://coveralls.io/github/motometer/telegram-bot-core?branch=coveralls)
