@@ -1,24 +1,23 @@
 package org.motometer.telegram.bot.core.label;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Locale;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import javax.inject.Inject;
-import java.util.Locale;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 class LabelServiceTest {
-    @Inject
-    LabelService labelService;
+
+    private LabelService labelService;
 
     @BeforeEach
     void setUp() {
-        DaggerLabelsComponent.builder().build().inject(this);
+        labelService = new LabelServiceModule().provideLabelService();
     }
 
     @Test
